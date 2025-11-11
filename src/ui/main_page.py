@@ -25,8 +25,29 @@ class MainPage(tk.Frame):
           expand=True
         )
 
-        start_button = ttk.Button(
+        self.control_button = ttk.Button(
           content_container,
-          text="Запустить"
+          text="Запустить",
+          command=lambda: [
+            self.toggle_buttons(mode="stop")
+          ]
         )
-        start_button.pack()
+        self.control_button.pack()
+
+    def toggle_buttons(self, mode="stop"):
+      print(mode)
+
+      if mode == "start":
+        self.control_button.config(
+            text="Запустить",
+            command=lambda: [
+              self.toggle_buttons(mode="stop")
+            ]
+        )
+      elif mode == "stop":
+        self.control_button.config(
+            text="Стоп",
+            command=lambda: [
+              self.toggle_buttons(mode="start")
+            ]
+        )
