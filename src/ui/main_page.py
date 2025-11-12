@@ -3,6 +3,8 @@ from tkinter import ttk
 import threading
 import subprocess
 
+from .settings_page import SettingsPage
+
 
 # Global variable for process
 process = None
@@ -33,9 +35,6 @@ class MainPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        self.create_widgets()
-
-    def create_widgets(self):
         # Main container
         main_container = tk.Frame(self)
         main_container.pack(
@@ -61,6 +60,15 @@ class MainPage(tk.Frame):
           ]
         )
         self.control_button.pack()
+
+        settings_button = ttk.Button(
+          content_container,
+          text="Настройки",
+          command=lambda: [
+            controller.show_frame(SettingsPage)
+          ]
+        )
+        settings_button.pack()
 
     def toggle_buttons(self, mode="stop"):
       if mode == "start":
