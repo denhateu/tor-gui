@@ -8,6 +8,27 @@ import subprocess
 process = None
 
 
+def run_tor():
+    global process
+    process = subprocess.Popen(
+      ["tor\\tor\\tor.exe", "-f", "tor\\tor\\torrc"],
+      stdout=subprocess.PIPE,
+      stderr=subprocess.STDOUT,
+      text=True
+    )
+
+    print("running")
+
+    for line in process.stdout:
+      print(line, end="")
+
+def stop_tor():
+    global process
+    if process and process.poll() is None:
+      process.terminate()
+      print("stopped")
+
+
 class MainPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -42,8 +63,6 @@ class MainPage(tk.Frame):
         self.control_button.pack()
 
     def toggle_buttons(self, mode="stop"):
-      print(mode)
-
       if mode == "start":
         self.control_button.config(
             text="Запустить",
@@ -57,30 +76,10 @@ class MainPage(tk.Frame):
             text="Стоп",
             command=lambda: [
               self.toggle_buttons(mode="start"),
-              self.stop_tor()
+              stop_tor()
             ]
         )
 
-    def run_tor(self):
-      global process
-      process = subprocess.Popen(
-        ["tor\\tor\\tor.exe", "-f", "tor\\tor\\torrc"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True
-      )
-
-      print("running")
-
-      for line in process.stdout:
-        print(line, end="")
-
-    def stop_tor(self):
-      global process
-      if process and process.poll() is None:
-        process.terminate()
-        print("stopped")
-
     def start_thread(self):
-      thread = threading.Thread(target=self.run_tor, daemon=True)
+      thread = threading.Thread(target=run_tor, daemon=True)
       thread.start()
