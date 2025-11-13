@@ -31,13 +31,31 @@ class SettingsPage(tk.Frame):
         )
         settings_button.pack()
 
-        config_textarea = tk.Text(content_container)
-        config_textarea.pack()
+        self.config_textarea = tk.Text(content_container)
+        self.config_textarea.pack()
 
-        config_textarea.insert(tk.END, self.get_config())
+        self.config_textarea.insert(tk.END, self.get_config())
+
+        save_button = ttk.Button(
+          content_container,
+          text="Сохранить",
+          command=lambda: [
+            self.save_config()
+          ]
+        )
+        save_button.pack()
 
     def get_config(self):
       with open("tor\\tor\\torrc", 'r', encoding="utf-8") as config_file:
         config = config_file.read()
 
       return config
+
+    def save_config(self):
+      # Gets config from textarea
+      textarea_config = self.config_textarea.get("1.0", tk.END)
+      print(textarea_config)
+
+      # Saves config to file
+      with open("tor\\tor\\torrc", 'w', encoding="utf-8") as config_file:
+        config_file.write(textarea_config)
