@@ -30,3 +30,14 @@ class SettingsPage(tk.Frame):
           ]
         )
         settings_button.pack()
+
+        config_textarea = tk.Text(content_container)
+        config_textarea.pack()
+
+        config_textarea.insert(tk.END, self.get_config())
+
+    def get_config(self):
+      with open("tor\\tor\\torrc", 'r', encoding="utf-8") as config_file:
+        config = config_file.read()
+
+      return config
