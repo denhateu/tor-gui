@@ -22,14 +22,14 @@ class SettingsPage(tk.Frame):
           expand=True
         )
 
-        settings_button = ttk.Button(
+        main_page_button = ttk.Button(
           content_container,
           text="Главная",
           command=lambda: [
             controller.show_main_page()
           ]
         )
-        settings_button.pack()
+        main_page_button.pack()
 
         self.config_textarea = tk.Text(content_container)
         self.config_textarea.pack()
