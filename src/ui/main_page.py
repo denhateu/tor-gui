@@ -4,6 +4,7 @@ import threading
 import subprocess
 
 from .settings_page import SettingsPage
+from .logs_page import LogsPage
 
 
 # Global variable for process
@@ -69,6 +70,15 @@ class MainPage(tk.Frame):
           ]
         )
         settings_button.pack()
+
+        logs_button = ttk.Button(
+          content_container,
+          text="Логи",
+          command=lambda: [
+            controller.show_frame(LogsPage)
+          ]
+        )
+        logs_button.pack()
 
     def toggle_buttons(self, mode="stop"):
       if mode == "start":

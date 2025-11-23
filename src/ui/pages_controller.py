@@ -3,6 +3,7 @@ import tkinter as tk
 from .main_page import MainPage
 from .empty_page import EmptyPage
 from .settings_page import SettingsPage
+from .logs_page import LogsPage
 
 
 class PagesController(tk.Tk):
@@ -43,7 +44,7 @@ class PagesController(tk.Tk):
         self.frames = {}
 
         # Write all frame class names to frames variable for switching
-        for frame in (MainPage, EmptyPage, SettingsPage):
+        for frame in (MainPage, EmptyPage, SettingsPage, LogsPage):
             current_frame = frame(container, self)
 
             self.frames[frame] = current_frame
