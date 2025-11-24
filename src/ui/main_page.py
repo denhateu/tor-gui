@@ -4,7 +4,7 @@ import threading
 import subprocess
 
 from .settings_page import SettingsPage
-from .logs_page import LogsPage
+from .logs_page import LogsPage, append_logs
 
 
 # Global variable for process
@@ -24,6 +24,13 @@ def run_tor():
 
     for line in process.stdout:
       print(line, end="")
+
+      # Writes logs to file
+      with open("logs.txt", 'a', encoding="utf-8") as logs_file:
+        # Write line to file
+        logs_file.write(line)
+
+      append_logs()
 
 def stop_tor():
     global process

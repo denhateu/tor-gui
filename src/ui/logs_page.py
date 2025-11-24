@@ -2,6 +2,22 @@ import tkinter as tk
 from tkinter import ttk
 
 
+logs_textarea = None
+
+
+def append_logs():
+  with open("logs.txt", 'r', encoding="utf-8") as logs_file:
+    all_logs = logs_file.read()
+
+  global logs_textarea
+
+  # Clear Text widged
+  logs_textarea.delete("1.0", tk.END)
+
+  # Append logs to clear Text widged
+  logs_textarea.insert("end", all_logs)
+
+
 class LogsPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -30,3 +46,7 @@ class LogsPage(tk.Frame):
           ]
         )
         main_page_button.pack()
+
+        global logs_textarea
+        logs_textarea = tk.Text(content_container)
+        logs_textarea.pack()
