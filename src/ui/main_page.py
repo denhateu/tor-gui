@@ -1,42 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
-import threading
-import subprocess
 
+from tor import Tor
 from .settings_page import SettingsPage
-from .logs_page import LogsPage, append_logs
+from .logs_page import LogsPage
 
 
-# Global variable for process
-process = None
-
-
-def run_tor():
-    global process
-    process = subprocess.Popen(
-      ["tor\\tor\\tor.exe", "-f", "tor\\tor\\torrc"],
-      stdout=subprocess.PIPE,
-      stderr=subprocess.STDOUT,
-      text=True
-    )
-
-    print("running")
-
-    for line in process.stdout:
-      print(line, end="")
-
-      # Writes logs to file
-      with open("logs.txt", 'a', encoding="utf-8") as logs_file:
-        # Write line to file
-        logs_file.write(line)
-
-      append_logs()
-
-def stop_tor():
-    global process
-    if process and process.poll() is None:
-      process.terminate()
-      print("stopped")
+tor = Tor()
 
 
 class MainPage(tk.Frame):
@@ -59,12 +29,14 @@ class MainPage(tk.Frame):
           expand=True
         )
 
+        global tor
+
         self.control_button = ttk.Button(
           content_container,
           text="Запустить",
           command=lambda: [
             self.toggle_buttons(mode="stop"),
-            self.start_thread()
+            tor.start()
           ]
         )
         self.control_button.pack()
@@ -88,12 +60,14 @@ class MainPage(tk.Frame):
         logs_button.pack()
 
     def toggle_buttons(self, mode="stop"):
+      global tor
+
       if mode == "start":
         self.control_button.config(
             text="Запустить",
             command=lambda: [
               self.toggle_buttons(mode="stop"),
-              self.start_thread()
+              tor.start()
             ]
         )
       elif mode == "stop":
@@ -101,10 +75,6 @@ class MainPage(tk.Frame):
             text="Стоп",
             command=lambda: [
               self.toggle_buttons(mode="start"),
-              stop_tor()
+              tor.stop()
             ]
         )
-
-    def start_thread(self):
-      thread = threading.Thread(target=run_tor, daemon=True)
-      thread.start()

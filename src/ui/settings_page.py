@@ -1,6 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
 
+from tor import Tor
+
+
+tor = Tor()
+
 
 class SettingsPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -34,7 +39,8 @@ class SettingsPage(tk.Frame):
         self.config_textarea = tk.Text(content_container)
         self.config_textarea.pack()
 
-        self.config_textarea.insert(tk.END, self.get_config())
+        global tor
+        self.config_textarea.insert(tk.END, tor.get_config())
 
         save_button = ttk.Button(
           content_container,
@@ -45,17 +51,10 @@ class SettingsPage(tk.Frame):
         )
         save_button.pack()
 
-    def get_config(self):
-      with open("tor\\tor\\torrc", 'r', encoding="utf-8") as config_file:
-        config = config_file.read()
-
-      return config
-
     def save_config(self):
       # Gets config from textarea
       textarea_config = self.config_textarea.get("1.0", tk.END)
-      print(textarea_config)
 
-      # Saves config to file
-      with open("tor\\tor\\torrc", 'w', encoding="utf-8") as config_file:
-        config_file.write(textarea_config)
+      # Saves new config
+      global tor
+      tor.change_config(textarea_config)

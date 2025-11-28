@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import threading
 
 
 logs_textarea = None
@@ -16,7 +17,6 @@ def append_logs():
 
   # Append logs to clear Text widged
   logs_textarea.insert("end", all_logs)
-
 
 class LogsPage(tk.Frame):
     def __init__(self, parent, controller):

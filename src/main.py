@@ -1,14 +1,17 @@
 import sys
-import os
 
+from tor import Tor
 from ui.pages_controller import PagesController
-from ui.main_page import stop_tor
 
 
-def on_close():
+tor = Tor()
+
+
+def on_close() -> None:
   print("exit")
 
-  stop_tor()
+  global tor
+  tor.stop()
 
   # Exit from program
   sys.exit(0)
@@ -16,15 +19,8 @@ def on_close():
 
 if __name__ == "__main__":
     # Checks if config not found then create new config
-    if not os.path.exists("tor\\tor\\torrc"):
-      print("Config not found, creates new config")
-
-      default_config = """
-SocksPort localhost:9050
-HTTPTunnelPort localhost:8118
-"""
-      with open("tor\\tor\\torrc", 'w', encoding="utf-8") as config_file:
-        config_file.write(default_config)
+    if not tor.config_exists():
+      tor.create_default_config()
 
     # Initialize pages controller
     app = PagesController()
