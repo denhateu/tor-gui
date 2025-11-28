@@ -31,11 +31,7 @@ class PagesController(tk.Tk):
 
         # Create main full screen frame
         container = tk.Frame(self)
-        container.pack(
-            side = "top",
-            fill = "both",
-            expand = True
-        )
+        container.pack(side="top", fill="both", expand=True)
 
         container.grid_columnconfigure(0, weight=1)
         container.grid_rowconfigure(0, weight=1)
@@ -49,11 +45,7 @@ class PagesController(tk.Tk):
 
             self.frames[frame] = current_frame
 
-            current_frame.grid(
-                column = 0,
-                row = 0,
-                sticky = "nsew"
-            )
+            current_frame.grid(column=0, row=0, sticky="nsew")
 
         # Open default frame
         self.show_frame(MainPage)

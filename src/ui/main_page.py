@@ -15,66 +15,45 @@ class MainPage(tk.Frame):
 
         # Main container
         main_container = tk.Frame(self)
-        main_container.pack(
-          anchor="center",
-          fill="both",
-          expand=True
-        )
+        main_container.pack(anchor="center", fill="both", expand=True)
 
         # Content container
         content_container = tk.Frame(main_container)
-        content_container.pack(
-          anchor="center",
-          fill="both",
-          expand=True
-        )
+        content_container.pack(anchor="center", fill="both", expand=True)
 
         global tor
 
         self.control_button = ttk.Button(
-          content_container,
-          text="Запустить",
-          command=lambda: [
-            self.toggle_buttons(mode="stop"),
-            tor.start()
-          ]
+            content_container,
+            text="Запустить",
+            command=lambda: [self.toggle_buttons(mode="stop"), tor.start()],
         )
         self.control_button.pack()
 
         settings_button = ttk.Button(
-          content_container,
-          text="Настройки",
-          command=lambda: [
-            controller.show_frame(SettingsPage)
-          ]
+            content_container,
+            text="Настройки",
+            command=lambda: [controller.show_frame(SettingsPage)],
         )
         settings_button.pack()
 
         logs_button = ttk.Button(
-          content_container,
-          text="Логи",
-          command=lambda: [
-            controller.show_frame(LogsPage)
-          ]
+            content_container,
+            text="Логи",
+            command=lambda: [controller.show_frame(LogsPage)],
         )
         logs_button.pack()
 
     def toggle_buttons(self, mode="stop"):
-      global tor
+        global tor
 
-      if mode == "start":
-        self.control_button.config(
-            text="Запустить",
-            command=lambda: [
-              self.toggle_buttons(mode="stop"),
-              tor.start()
-            ]
-        )
-      elif mode == "stop":
-        self.control_button.config(
-            text="Стоп",
-            command=lambda: [
-              self.toggle_buttons(mode="start"),
-              tor.stop()
-            ]
-        )
+        if mode == "start":
+            self.control_button.config(
+                text="Запустить",
+                command=lambda: [self.toggle_buttons(mode="stop"), tor.start()],
+            )
+        elif mode == "stop":
+            self.control_button.config(
+                text="Стоп",
+                command=lambda: [self.toggle_buttons(mode="start"), tor.stop()],
+            )

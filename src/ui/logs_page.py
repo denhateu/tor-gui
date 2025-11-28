@@ -1,22 +1,22 @@
 import tkinter as tk
 from tkinter import ttk
-import threading
 
 
 logs_textarea = None
 
 
 def append_logs():
-  with open("logs.txt", 'r', encoding="utf-8") as logs_file:
-    all_logs = logs_file.read()
+    with open("logs.txt", "r", encoding="utf-8") as logs_file:
+        all_logs = logs_file.read()
 
-  global logs_textarea
+    global logs_textarea
 
-  # Clear Text widged
-  logs_textarea.delete("1.0", tk.END)
+    # Clear Text widged
+    logs_textarea.delete("1.0", tk.END)
 
-  # Append logs to clear Text widged
-  logs_textarea.insert("end", all_logs)
+    # Append logs to clear Text widged
+    logs_textarea.insert("end", all_logs)
+
 
 class LogsPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -24,26 +24,16 @@ class LogsPage(tk.Frame):
 
         # Main container
         main_container = tk.Frame(self)
-        main_container.pack(
-          anchor="center",
-          fill="both",
-          expand=True
-        )
+        main_container.pack(anchor="center", fill="both", expand=True)
 
         # Content container
         content_container = tk.Frame(main_container)
-        content_container.pack(
-          anchor="center",
-          fill="both",
-          expand=True
-        )
+        content_container.pack(anchor="center", fill="both", expand=True)
 
         main_page_button = ttk.Button(
-          content_container,
-          text="Главная",
-          command=lambda: [
-            controller.show_main_page()
-          ]
+            content_container,
+            text="Главная",
+            command=lambda: [controller.show_main_page()],
         )
         main_page_button.pack()
 
