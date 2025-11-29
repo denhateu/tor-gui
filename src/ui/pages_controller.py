@@ -1,9 +1,14 @@
 import tkinter as tk
+import logging
 
 from .main_page import MainPage
 from .empty_page import EmptyPage
 from .settings_page import SettingsPage
 from .logs_page import LogsPage
+
+
+# Setup logging
+logger = logging.getLogger("mylogger")
 
 
 class PagesController(tk.Tk):
@@ -19,10 +24,14 @@ class PagesController(tk.Tk):
                 Name of the frame class to open
         """
 
+        logger.debug(f"Changing frame to {frame_container}")
+
         frame = self.frames[frame_container]
         frame.tkraise()
 
     def show_main_page(self):
+        logger.debug("Opening main page")
+
         frame = self.frames[MainPage]
         frame.tkraise()
 

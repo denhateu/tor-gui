@@ -1,17 +1,25 @@
 import sys
 
+from logging_setup import setup_logging
 from tor import Tor
 from ui.pages_controller import PagesController
 
+
+# Setup logging
+logger = setup_logging()
 
 tor = Tor()
 
 
 def on_close() -> None:
-    print("exit")
+    global logger
+
+    logger.info("Stopping tor...")
 
     global tor
     tor.stop()
+
+    logger.info("Exit...")
 
     # Exit from program
     sys.exit(0)
@@ -19,8 +27,14 @@ def on_close() -> None:
 
 if __name__ == "__main__":
     # Checks if config not found then create new config
-    if not tor.config_exists():
+    if tor.config_exists():
+        logger.info("Tor config file found")
+    else:
+        logger.warning("Tor config file not found, create new config")
+
         tor.create_default_config()
+
+        logger.info("New Tor config created!")
 
     # Initialize pages controller
     app = PagesController()
