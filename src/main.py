@@ -12,13 +12,10 @@ tor = Tor()
 
 
 def on_close() -> None:
-    global logger
-
-    logger.info("Stopping tor...")
-
     global tor
     tor.stop()
 
+    global logger
     logger.info("Exit...")
 
     # Exit from program

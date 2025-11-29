@@ -63,7 +63,7 @@ HTTPTunnelPort localhost:8118
         self.tor_thread = threading.Thread(target=self.run_tor, daemon=True)
         self.tor_thread.start()
 
-        logger.info("Thread started")
+        logger.info("Thread started!")
 
     def stop(self) -> None:
         global logger
@@ -71,7 +71,10 @@ HTTPTunnelPort localhost:8118
         process = self.tor_process
 
         if process and process.poll() is None:
+            logger.info("Stopping tor...")
+
             process.terminate()
+
             logger.info("Tor stopped!")
         else:
             logger.warning("No runned tor process")
