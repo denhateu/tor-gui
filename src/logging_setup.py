@@ -1,4 +1,5 @@
 import logging
+import os
 from datetime import datetime
 
 
@@ -14,9 +15,14 @@ def setup_logging():
         now_time = now.strftime("%Y-%m-%d %H_%M_%S")
 
         logs_file_name = f"app_logs {now_time}.log"
+        logs_file_path = f"logs\\{logs_file_name}"
+
+        # Checks if directory or file not found
+        if not os.path.exists(logs_file_path):
+            os.mkdir("logs")
 
         console_handler = logging.StreamHandler()
-        log_file_handler = logging.FileHandler(logs_file_name)
+        log_file_handler = logging.FileHandler(logs_file_path)
 
         formatter = logging.Formatter(
             "[ %(levelname)s ] %(asctime)s - %(message)s"
