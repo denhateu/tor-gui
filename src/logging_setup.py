@@ -18,7 +18,7 @@ def setup_logging():
         logs_file_path = f"logs\\{logs_file_name}"
 
         # Checks if directory or file not found
-        if not os.path.exists(logs_file_path):
+        if not os.path.exists("logs"):
             os.mkdir("logs")
 
         console_handler = logging.StreamHandler()

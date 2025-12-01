@@ -5,17 +5,14 @@ from tkinter import ttk
 logs_textarea = None
 
 
-def append_logs():
-    with open("logs.txt", "r", encoding="utf-8") as logs_file:
-        all_logs = logs_file.read()
-
+def append_logs(log_string):
     global logs_textarea
 
-    # Clear Text widged
-    logs_textarea.delete("1.0", tk.END)
+    # Append logs to textarea
+    logs_textarea.insert(tk.END, log_string)
 
-    # Append logs to clear Text widged
-    logs_textarea.insert("end", all_logs)
+    # Automatically scroll to the bottom to show the newest logs
+    logs_textarea.see(tk.END)
 
 
 class LogsPage(tk.Frame):

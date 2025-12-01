@@ -2,6 +2,7 @@ import os
 import subprocess
 import threading
 import logging
+from datetime import datetime
 
 from ui.logs_page import append_logs
 
@@ -14,6 +15,17 @@ class Tor:
     def __init__(self) -> None:
         self.tor_path = "tor\\tor\\tor.exe"
         self.tor_config_path = "tor\\tor\\torrc"
+
+        # Gets now date and time for logs file name
+        now = datetime.now()
+        now_time = now.strftime("%Y-%m-%d %H_%M_%S")
+
+        logs_file_name = f"tor_logs {now_time}.log"
+        self.tor_logs_file_path = f"tor\\logs\\{logs_file_name}"
+
+        # Create logs directory if not exists
+        if not os.path.exists("tor\\logs"):
+            os.mkdir("tor\\logs")
 
         self.default_config = """
 SocksPort localhost:9050
@@ -95,8 +107,8 @@ HTTPTunnelPort localhost:8118
 
         for line in self.tor_process.stdout:
             # Writes logs to file
-            with open("logs.txt", "a", encoding="utf-8") as logs_file:
+            with open(self.tor_logs_file_path, "a", encoding="utf-8") as logs_file:
                 # Write line to file
                 logs_file.write(line)
 
-            append_logs()
+            append_logs(line)
