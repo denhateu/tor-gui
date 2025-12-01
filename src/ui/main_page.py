@@ -15,10 +15,61 @@ class MainPage(tk.Frame):
 
         # Main container
         main_container = tk.Frame(self)
-        main_container.pack(anchor="center", fill="both", expand=True)
+        main_container.pack(
+            padx=15,
+            pady=15,
+            anchor="center",
+            fill="both",
+            expand=True
+        )
+
+        # Header container
+        header_container = tk.Frame(
+            main_container
+        )
+        header_container.pack(
+            side="top",
+            anchor="n",
+            fill="x",
+        )
+
+        header_inner_container = tk.Frame(
+            header_container
+        )
+        header_inner_container.pack(
+            fill="x",
+            expand=True
+        )
+
+        header_inner_container.columnconfigure(index=(0, 1), weight=1)
+        header_inner_container.rowconfigure(index=0, weight=1)
+
+        settings_button = ttk.Button(
+            header_inner_container,
+            text="Настройки",
+            command=lambda: [controller.show_frame(SettingsPage)],
+        )
+        settings_button.grid(
+            sticky="nw",
+            column=0,
+            row=0
+        )
+
+        logs_button = ttk.Button(
+            header_inner_container,
+            text="Логи",
+            command=lambda: [controller.show_frame(LogsPage)],
+        )
+        logs_button.grid(
+            sticky="ne",
+            column=1,
+            row=0
+        )
 
         # Content container
-        content_container = tk.Frame(main_container)
+        content_container = tk.Frame(
+            main_container,
+        )
         content_container.pack(anchor="center", fill="both", expand=True)
 
         global tor
@@ -28,21 +79,12 @@ class MainPage(tk.Frame):
             text="Запустить",
             command=lambda: [self.toggle_buttons(mode="stop"), tor.start()],
         )
-        self.control_button.pack()
-
-        settings_button = ttk.Button(
-            content_container,
-            text="Настройки",
-            command=lambda: [controller.show_frame(SettingsPage)],
+        self.control_button.pack(
+            ipadx=30,
+            ipady=30,
+            anchor="center",
+            expand=True
         )
-        settings_button.pack()
-
-        logs_button = ttk.Button(
-            content_container,
-            text="Логи",
-            command=lambda: [controller.show_frame(LogsPage)],
-        )
-        logs_button.pack()
 
     def toggle_buttons(self, mode="stop"):
         global tor
