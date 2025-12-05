@@ -1,8 +1,10 @@
 import sys
 
+from config import WINDOW_TITLE
 from logging_setup import setup_logging
 from tor import Tor
 from ui.pages_controller import PagesController
+from screen_size import get_screen_size
 
 
 # Setup logging
@@ -35,6 +37,22 @@ if __name__ == "__main__":
 
     # Initialize pages controller
     app = PagesController()
+
+    # Configure window
+    app.title(WINDOW_TITLE)
+
+    # Gets screen sizes (width, height) in pixels
+    screen_size = get_screen_size()
+
+    # Gets 1/2 of screen sizes
+    window_width = screen_size[0] // 2
+    window_height = screen_size[1] // 2
+
+    # Center of screen points
+    position_x = (screen_size[0] - window_width) // 2
+    position_y = (screen_size[1] - window_height) // 2
+
+    app.geometry(f"{window_width}x{window_height}+{position_x}+{position_y}")
 
     app.protocol("WM_DELETE_WINDOW", on_close)
 

@@ -1,0 +1,1 @@
+WINDOW_TITLE = "Verborgen | v0.0.0-alpha"
