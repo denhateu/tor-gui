@@ -12,3 +12,7 @@ wheels/
 # Other files
 tor/tor/torrc
 logs/
+bin/
+
+# IDE config files
+*.sublime-workspace
