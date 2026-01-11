@@ -3,8 +3,7 @@ import subprocess
 import threading
 import logging
 from datetime import datetime
-
-from ui.logs_page import append_logs
+import re
 
 
 # Setup logging
@@ -13,6 +12,13 @@ logger = logging.getLogger("mylogger")
 
 class Tor:
     def __init__(self) -> None:
+        self.on_status = None
+        self.on_percentage = None
+        self.on_log = None
+
+        self.tor_thread = None
+        self.tor_process = None
+
         self.tor_path = "tor\\tor\\tor.exe"
         self.tor_config_path = "tor\\tor\\torrc"
 
@@ -32,8 +38,14 @@ SocksPort localhost:9050
 HTTPTunnelPort localhost:8118
 """
 
-        self.tor_thread = None
-        self.tor_process = None
+    def set_status_callback(self, callback):
+        self.on_status = callback
+
+    def set_status_percentage_callback(self, callback):
+        self.on_percentage = callback
+
+    def set_log_callback(self, callback):
+        self.on_log = callback
 
     def config_exists(self) -> bool:
         global logger
@@ -67,10 +79,21 @@ HTTPTunnelPort localhost:8118
 
         logger.info(f"{self.tor_config_path} saved")
 
+    def get_percentage(self, line):
+        pattern = re.compile(r'(\d[0-9]*%)')
+        match = pattern.search(line)
+
+        if match:
+            return match.group(1)
+
+        return ""
+
     def start(self) -> None:
         global logger
-
         logger.info("Starting tor thread...")
+
+        if self.on_status:
+            self.on_status("connecting")
 
         self.tor_thread = threading.Thread(target=self.run_tor, daemon=True)
         self.tor_thread.start()
@@ -87,13 +110,15 @@ HTTPTunnelPort localhost:8118
 
             process.terminate()
 
+            if self.on_status:
+                self.on_status("stopped")
+
             logger.info("Tor stopped!")
         else:
             logger.warning("No runned tor process")
 
     def run_tor(self) -> None:
         global logger
-
         logger.info("Starting tor process...")
 
         self.tor_process = subprocess.Popen(
@@ -106,9 +131,23 @@ HTTPTunnelPort localhost:8118
         logger.info("Tor started!")
 
         for line in self.tor_process.stdout:
+            if self.tor_process and self.tor_process.poll() != None:
+                self.on_status("stopped")
+                break
+
             # Writes logs to file
             with open(self.tor_logs_file_path, "a", encoding="utf-8") as logs_file:
                 # Write line to file
                 logs_file.write(line)
 
-            append_logs(line)
+            if self.on_percentage:
+                percentage = self.get_percentage(line)
+                if percentage != "":
+                    self.on_percentage(percentage)
+
+                if percentage == "100%":
+                    if self.on_status:
+                        self.on_status("running")
+
+            if self.on_log:
+                self.on_log(line)

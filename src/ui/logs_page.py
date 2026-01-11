@@ -1,23 +1,18 @@
 import tkinter as tk
 from tkinter import ttk
 
+from tor import Tor
 
-logs_textarea = None
 
-
-def append_logs(log_string):
-    global logs_textarea
-
-    # Append logs to textarea
-    logs_textarea.insert(tk.END, log_string)
-
-    # Automatically scroll to the bottom to show the newest logs
-    logs_textarea.see(tk.END)
+tor = Tor()
 
 
 class LogsPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+
+        global tor
+        tor.set_log_callback(self.on_append_logs)
 
         # Main container
         main_container = tk.Frame(
@@ -78,9 +73,20 @@ class LogsPage(tk.Frame):
             anchor="w"
         )
 
-        global logs_textarea
-        logs_textarea = tk.Text(content_container)
-        logs_textarea.pack(
+        self.logs_textarea = tk.Text(content_container)
+        self.logs_textarea.pack(
             fill="both",
             expand=True
         )
+
+    def on_append_logs(self, log):
+        print(log)
+        self.after(0, self.append_logs, log)
+
+    def append_logs(self, log):
+        print("sobaka")
+        # # Append logs to textarea
+        # self.logs_textarea.insert(tk.END, log)
+
+        # # Automatically scroll to the bottom to show the newest logs
+        # self.logs_textarea.see(tk.END)

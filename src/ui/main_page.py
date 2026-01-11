@@ -13,6 +13,11 @@ class MainPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
+        global tor
+
+        tor.set_status_callback(self.on_update_status)
+        tor.set_status_percentage_callback(self.on_update_status_percentage)
+
         # Main container
         main_container = tk.Frame(self)
         main_container.pack(
@@ -72,8 +77,6 @@ class MainPage(tk.Frame):
         )
         content_container.pack(anchor="center", fill="both", expand=True)
 
-        global tor
-
         self.control_button = ttk.Button(
             content_container,
             text="Запустить",
@@ -86,7 +89,6 @@ class MainPage(tk.Frame):
             expand=True
         )
 
-        """
         status_container = tk.Frame(
             content_container
         )
@@ -113,19 +115,18 @@ class MainPage(tk.Frame):
         self.progress_label = tk.Label(
             status_container,
             font=("", 14),
-            fg="yellow"
+            fg="#f0e035"
         )
         self.progress_label.grid(
             sticky="w",
             column=1,
             row=0
         )
-        """
 
     def toggle_buttons(self, mode="stop"):
         global tor
 
-        if mode == "start":
+        if mode == "start" or mode == "stopped":
             self.control_button.config(
                 text="Запустить",
                 command=lambda: [
@@ -133,22 +134,29 @@ class MainPage(tk.Frame):
                     tor.start()
                 ],
             )
-
-            """
-            self.status_label.config(
-                text="Выключен",
-                fg="red"
-            )
-            """
         elif mode == "stop":
             self.control_button.config(
                 text="Стоп",
                 command=lambda: [self.toggle_buttons(mode="start"), tor.stop()],
             )
 
-            """
-            self.status_label.config(
-                text="Подключение",
-                fg="yellow"
-            )
-            """
+    def on_update_status(self, status):
+        self.after(0, self.update_status, status)
+        self.after(0, self.toggle_buttons, status)
+
+    def on_update_status_percentage(self, percentage):
+        self.after(0, self.update_progress_label, percentage)
+
+    def update_status(self, status):
+        if status == "connecting":
+            self.status_label.config(text="Подключение", fg="#f0e035")
+            self.progress_label.config(text="0%")
+        elif status == "running":
+            self.status_label.config(text="Запущен", fg="#29e314")
+            self.progress_label.config(text="")
+        elif status == "stopped":
+            self.status_label.config(text="Выключен", fg="red")
+            self.progress_label.config(text="")
+
+    def update_progress_label(self, percentage):
+        self.progress_label.config(text=percentage)
