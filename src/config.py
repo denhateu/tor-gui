@@ -1,1 +1,0 @@
-WINDOW_TITLE = "Verborgen | v0.0.1-alpha"
