@@ -10,7 +10,7 @@ wheels/
 .venv
 
 # Other files
-tor/tor/torrc
+tor/torrc
 logs/
 bin/
 node_modules/
