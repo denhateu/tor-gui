@@ -1,6 +1,9 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const { spawn } = require("child_process");
 const path = require("path");
+const kill = require('tree-kill');
+
+let torProcess = null
 
 function createWindow() {
    const win = new BrowserWindow({
@@ -16,21 +19,34 @@ function createWindow() {
 }
 
 ipcMain.handle("start-process", () => {
-   const child = spawn("./tor/tor/tor.exe", ["-f", "./tor/torrc"]);
+   torProcess = spawn("./tor/tor/tor.exe", ["-f", "./tor/torrc"]);
 
-   child.stdout.on("data", (data) => {
+   torProcess.stdout.on("data", (data) => {
       console.log(data.toString("utf8"));
    });
 
-   child.stderr.on("data", (data) => {
+   torProcess.stderr.on("data", (data) => {
       console.log(data.toString("utf8"));
    });
 
-   child.on("close", (code) => {
+   torProcess.on("close", (code) => {
       console.log(`code: ${code}`);
    });
 
    return "process started";
+});
+
+ipcMain.on("kill-process", () => {
+   if (torProcess !== null) {
+      kill(torProcess.pid, "SIGKILL", (err) => {
+         if (err) {
+            console.log(`Failed to kill process: ${err}`);
+         } else {
+            console.log("Process killed successfully!");
+            torProcess = null;
+         }
+      });
+   }
 });
 
 app.whenReady().then(createWindow);

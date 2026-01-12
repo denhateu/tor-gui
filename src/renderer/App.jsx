@@ -7,7 +7,15 @@ export default function App() {
       console.log(result);
    }
 
+   const stopTorHandleClick = async () => {
+      const result = await window.electronAPI.stopProcess();
+      console.log(result);
+   }
+
    return (
-      <button onClick={startTorHandleClick}>Старт</button>
+      <div>
+         <button onClick={startTorHandleClick}>Старт</button>
+         <button onClick={stopTorHandleClick}>Стоп</button>
+      </div>
    );
 }
