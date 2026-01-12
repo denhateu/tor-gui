@@ -1,3 +1,5 @@
-window.addEventListener("DOMContentLoaded", () => {
-   console.log("Preload loaded");
-})
+const { contextBridge, ipcRenderer } = require("electron");
+
+contextBridge.exposeInMainWorld("electronAPI", {
+   startProcess: () => ipcRenderer.invoke("start-process")
+});
