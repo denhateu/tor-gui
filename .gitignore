@@ -13,6 +13,7 @@ wheels/
 tor/tor/torrc
 logs/
 bin/
+node_modules/
 
 # IDE config files
 *.sublime-workspace
