@@ -1,21 +1,22 @@
 import React from "react";
-import "../assets/css/style.css";
+import { HashRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import "../assets/css/null.css";
+import HomePage from "./pages/Home";
+import LogsPage from "./pages/Logs";
 
-export default function App() {
-   const startTorHandleClick = async () => {
-      const result = await window.electronAPI.startProcess();
-      console.log(result);
-   }
-
-   const stopTorHandleClick = async () => {
-      const result = await window.electronAPI.stopProcess();
-      console.log(result);
-   }
-
+function App() {
    return (
-      <div>
-         <button onClick={startTorHandleClick}>Старт</button>
-         <button onClick={stopTorHandleClick}>Стоп</button>
-      </div>
+      <Router>
+         <nav>
+            <Link to="/">Главная</Link>
+            <Link to="/logs">Логи</Link>
+         </nav>
+         <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/logs" element={<LogsPage />} />
+         </Routes>
+      </Router>
    );
 }
+
+export default App;

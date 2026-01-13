@@ -3,10 +3,12 @@ const { spawn } = require("child_process");
 const path = require("path");
 const kill = require('tree-kill');
 
+let mainWindow = null;
 let torProcess = null
+let logsList = [];
 
 function createWindow() {
-   const win = new BrowserWindow({
+   mainWindow = new BrowserWindow({
       width: 640,
       height: 480,
       webPreferences: {
@@ -15,25 +17,39 @@ function createWindow() {
       }
    });
 
-   win.loadFile("public/index.html");
+   mainWindow.loadFile("public/index.html");
+}
+
+function onLog(log) {
+   logsList.push(log);
+   if (mainWindow) {
+      mainWindow.webContents.send("log-message", log);
+   }
 }
 
 ipcMain.handle("start-process", () => {
    torProcess = spawn("./tor/tor/tor.exe", ["-f", "./tor/torrc"]);
 
    torProcess.stdout.on("data", (data) => {
-      console.log(data.toString("utf8"));
+      let dataString = data.toString("utf8");
+
+      onLog(dataString);
+      console.log(dataString);
    });
 
    torProcess.stderr.on("data", (data) => {
-      console.log(data.toString("utf8"));
+      let dataString = data.toString("utf8");
+
+      onLog(`Errro: ${dataString}`);
+      console.log(dataString);
    });
 
    torProcess.on("close", (code) => {
+      onLog(`Code: ${code}`);
       console.log(`code: ${code}`);
    });
 
-   return "process started";
+   return true;
 });
 
 ipcMain.on("kill-process", () => {
@@ -41,13 +57,20 @@ ipcMain.on("kill-process", () => {
       kill(torProcess.pid, "SIGKILL", (err) => {
          if (err) {
             console.log(`Failed to kill process: ${err}`);
+            return false;
          } else {
             console.log("Process killed successfully!");
             torProcess = null;
          }
       });
+
+      return true;
+   } else {
+      return false;
    }
 });
+
+ipcMain.handle("get-logs", () => logsList);
 
 app.whenReady().then(createWindow);
 
