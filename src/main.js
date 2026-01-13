@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const { spawn } = require("child_process");
 const path = require("path");
+const fs = require("fs");
 const kill = require('tree-kill');
 
 let mainWindow = null;
@@ -71,6 +72,10 @@ ipcMain.on("kill-process", () => {
 });
 
 ipcMain.handle("get-logs", () => logsList);
+
+ipcMain.handle("read-file", async (_, filePath) => {
+   return fs.readFileSync(filePath, "utf-8");
+});
 
 app.whenReady().then(createWindow);
 
