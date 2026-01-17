@@ -77,6 +77,11 @@ ipcMain.handle("read-file", async (_, filePath) => {
    return fs.readFileSync(filePath, "utf-8");
 });
 
+ipcMain.handle("save-file", async (_, { filePath, content }) => {
+   fs.writeFileSync(filePath, content, "utf-8");
+   return true;
+});
+
 app.whenReady().then(createWindow);
 
 app.on("window-all-closed", () => {

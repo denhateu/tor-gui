@@ -8,4 +8,5 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
 contextBridge.exposeInMainWorld("fileAPI", {
    readFile: (path) => ipcRenderer.invoke("read-file", path),
+   saveFile: (path, content) => ipcRenderer.invoke("save-file", { filePath: path, content: content }),
 });
