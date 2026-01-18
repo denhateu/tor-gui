@@ -4,6 +4,8 @@
   "description": "",
   "main": "src/main.js",
   "scripts": {
+    "webpack": "webpack --mode development --watch",
+    "electron": "electron .",
     "build": "webpack --mode development",
     "dev": "webpack serve --mode development --target web --open",
     "start": "npm run build && electron ."
