@@ -8,15 +8,11 @@ export default function HomePage() {
 
    const startTorHandleClick = async () => {
       const result = await window.electronAPI.startProcess();
-      console.log("1");
-      console.log(result);
       setVpnStarted(true);
    }
 
    const stopTorHandleClick = async () => {
       const result = await window.electronAPI.stopProcess();
-      console.log("2");
-      console.log(result);
       setVpnStarted(false);
    }
 
