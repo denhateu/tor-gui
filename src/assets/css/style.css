@@ -1,3 +1,21 @@
 @tailwind base;
-@tailwind component;
+@tailwind components;
 @tailwind utilities;
+
+@layer components {
+   .button {
+      @apply flex items-center justify-center p-2 rounded-md transition-colors bg-[#e6e6e6] hover:bg-[#ededed];
+   }
+
+   .vpn-button {
+      @apply flex items-center justify-center transition-colors rounded-full border-4;
+   }
+
+   .vpn-button_normal {
+      @apply vpn-button border-[#808080] bg-[#666666] hover:bg-[#757575];
+   }
+
+   .vpn-button_green {
+      @apply vpn-button border-[#26d413] bg-[#2eb81f] hover:bg-[#2dc21d];
+   }
+}
