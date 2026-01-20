@@ -18,4 +18,8 @@
    .vpn-button_green {
       @apply vpn-button border-[#26d413] bg-[#2eb81f] hover:bg-[#2dc21d];
    }
+
+   .textarea {
+      @apply px-4 py-2 border-2 border-indigo-500 rounded-md transition-colors overflow-x-hidden overflow-y-auto outline-none text-black bg-gray-100 hover:border-indigo-600;
+   }
 }
